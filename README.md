@@ -25,12 +25,13 @@
   - [Fine-tuned Whisper Model Evaluations](#fine-tuned-whisper-model-evaluations)
 - [Environment, Requirements and Dependencies](#environment-requirements-and-dependencies)
 - [References](#references)
-  - [Research Paper and Presentation](#research-paper-and-presentation)
+  - [Project Artifacts (Research Paper and Presentation)](#project-artifacts-research-paper-and-presentation)
+  - [Core Speech \& Translation Datasets](#core-speech--translation-datasets)
   - [Literature Survey](#literature-survey)
-  - [Arabic Speech Datasets](#arabic-speech-datasets)
-  - [LLM Leaderboards](#llm-leaderboards)
-  - [Translation LLMs](#translation-llms)
-  - [Useful Utils](#useful-utils)
+  - [Arabic Speech \& NLP Data Repositories](#arabic-speech--nlp-data-repositories)
+  - [Arabic \& Multilingual LLM Benchmarks](#arabic--multilingual-llm-benchmarks)
+  - [Translation-Focused LLMs](#translation-focused-llms)
+  - [Tooling \& Utilities](#tooling--utilities)
 
 ## Publications & Presentation
 
@@ -83,7 +84,46 @@ The paper is organized as follows:
 
 ## Proposed Methodology
 
-- TBC
+```mermaid
+graph TB
+    subgraph "Data Preparation Pipeline"
+        A[Raw ECA Speech Data<br/>MGB-3, DACS, **ArzEn**] --> B[LLM Translation<br/>Arz → En]
+        B --> C[Translated Training Corpus<br/>Code-Switched ECA-EN]
+    end
+    
+    subgraph "Whisper Model Fine-tuning"
+        D[Pretrained Whisper<br/>base/small/medium/large] --> E[Fine-tuning Process<br/>BS=16, GA=2]
+        C --> E
+        E --> F[Fine-tuned Whisper Model<br/>for ECA Speech Translation]
+        
+        G["Special Tokens:<br/>&lt;|startoftranscript|&gt;<br/>&lt;|ar|&gt; (language)<br/>&lt;|translate|&gt; (task)"] -.-> E
+    end
+    
+    subgraph "Inference Pipeline"
+        H[Input: ECA Speech<br/>Code-Switched Audio] --> F
+        F --> I[Beam Search Decoding<br/>beam_size=5, chunk_length=30s]
+        I --> J[Output: English Translation<br/>Text]
+    end
+    
+    subgraph "Evaluation Datasets"
+        K[Fleurs ar.eg]
+        L[ESCWA]
+        M[ArzEn-ST<br/>ECA & CSW splits]
+    end
+    
+    F -.-> K
+    F -.-> L
+    F -.-> M
+    
+    K --> N[WER% Metrics]
+    L --> N
+    M --> O[WER% + BLEU Metrics]
+    
+    style F fill:#4CAF50,stroke:#2E7D32,stroke-width:3px,color:#fff
+    style B fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
+    style G fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
+    style I fill:#9C27B0,stroke:#6A1B9A,stroke-width:2px,color:#fff
+```
 
 ## Training and Evaluation Datasets
 
@@ -145,12 +185,12 @@ python whisper_evaluation.py --dataset-name {fleurs,escwa} --model-path /path/to
 
 ### Fine-tuned Whisper Model Evaluations
 
-| Whisper Model Variant | Fine-tuning dataset(s) | Fine-tuning Hyperparameters |         Inference Hyperparameters         | Fleurs ar.eg Arabic `(transcription column)` testset WER% | ESCWA WER% | Arzen ECA WER% | Arzen BLEU% |
-| :-------------------: | :--------------------: | :-------------------------: | :---------------------------------------: | :-------------------------------------------------------: | :--------: | :------------: | :---------: |
-|         base          |       Zero-shot        |              -              | (fp32) BSD, beam_size=5, chunk_length=30s |                          48.50%                           |  140.76%   |     XX.XX%     |   XX.XX%    |
-|         small         |       Zero-shot        |              -              | (fp32) BSD, beam_size=5, chunk_length=30s |                          30.29%                           |   98.15%   |     XX.XX%     |   XX.XX%    |
-|         base          | Translated MGB-3/DACS  |       (BS=16 & GA=2)*       | (fp32) BSD, beam_size=5, chunk_length=30s |                          XX.XX%                           |   XX.XX%   |     XX.XX%     |   XX.XX%    |
-|         small         | Translated MGB-3/DACS  |       (BS=16 & GA=2)*       | (fp32) BSD, beam_size=5, chunk_length=30s |                          XX.XX%                           |   XX.XX%   |     XX.XX%     |   XX.XX%    |
+| Whisper Model Variant | Fine-tuning dataset(s) | Fine-tuning Hyperparameters |         Inference Hyperparameters         | Fleurs ar.eg testset^ WER% | ESCWA WER% | Arzen ECA WER% | Arzen CSW WER% | Arzen BLEU% |
+| :-------------------: | :--------------------: | :-------------------------: | :---------------------------------------: | :------------------------: | :--------: | :------------: | :------------: | :---------: |
+|         base          |       Zero-shot        |              -              | (fp32) BSD, beam_size=5, chunk_length=30s |           48.50%           |  140.76%   |     XX.XX%     |     XX.XX%     |   XX.XX%    |
+|         small         |       Zero-shot        |              -              | (fp32) BSD, beam_size=5, chunk_length=30s |           30.29%           |   98.15%   |     XX.XX%     |     XX.XX%     |   XX.XX%    |
+|         base          | Translated MGB-3/DACS  |       (BS=16 & GA=2)*       | (fp32) BSD, beam_size=5, chunk_length=30s |           XX.XX%           |   XX.XX%   |     XX.XX%     |     XX.XX%     |   XX.XX%    |
+|         small         | Translated MGB-3/DACS  |       (BS=16 & GA=2)*       | (fp32) BSD, beam_size=5, chunk_length=30s |           XX.XX%           |   XX.XX%   |     XX.XX%     |     XX.XX%     |   XX.XX%    |
 
 <div style="page-break-before:always"></div>
 
@@ -158,6 +198,7 @@ python whisper_evaluation.py --dataset-name {fleurs,escwa} --model-path /path/to
 
 - All **WER% scores** are calculated after **reference and hypothesis text normalization** using ```whisper.normalizers.BasicTextNormalizer```.
 - *: All other Hyperparameters are unchanged in the python fine-tuning script `(src/whisper_finetuning.py)`.
+- ^: Provided Normalized `transcription` column is used instead of `raw_transcription` column.
 
 ## Environment, Requirements and Dependencies
 
@@ -179,30 +220,39 @@ pip install -r requirements.txt
 
 ## References
 
-### Research Paper and Presentation
+### Project Artifacts (Research Paper and Presentation)
 
 - [ArzEn-E2E: Advancing End-to-End Speech Translation for Egyptian Arabic](https://www.overleaf.com/project/6929db0402a08f0749b23518)
 - [ArzEn-E2E: Advancing End-to-End Speech Translation for Egyptian Arabic Presentation](https://docs.google.com/presentation/d/1-vVKJsEQ59G4NaCPfwJ7EiEfvRK2tsHbqS5wwKmGosw/edit?slide=id.p#slide=id.p)
+
+### Core Speech & Translation Datasets
+
+- [MohamedRashad/MGB-3-Arabic](https://huggingface.co/datasets/MohamedRashad/MGB-3-Arabic)
+- [DACS](https://github.com/qcri/Arabic_speech_code_switching)
+- [google/fleurs](https://huggingface.co/datasets/google/fleurs)
+- [QCRI/escwa](https://huggingface.co/datasets/QCRI/escwa)
+- [ArzEn Speech Corpus](https://www.kaggle.com/datasets/ahmedsamehahmed/arzen-speechcorpus-dataset)
+- [ArzEn-ST Corpus](https://sites.google.com/view/arzen-corpus/resources)
 
 ### Literature Survey
 
 - [Robust Speech Recognition via Large-Scale Weak Supervision](https://arxiv.org/abs/2212.04356)
 - [Speech Recognition Challenge in the Wild: Arabic MGB-3](https://arxiv.org/abs/1709.07276)
 - [Effects of Dialectal Code-Switching on Speech Modules: A Study Using Egyptian Arabic Broadcast Speech](https://www.isca-archive.org/interspeech_2020/chowdhury20c_interspeech.html)
+- [FLEURS: Few-shot Learning Evaluation of Universal Representations of Speech](https://arxiv.org/abs/2205.12446)
+- [Arabic Code-Switching Speech Recognition using Monolingual Data](https://arxiv.org/abs/2107.01573)
 - [ArzEn: A Speech Corpus for Code-switched Egyptian Arabic-English](https://aclanthology.org/2020.lrec-1.523/)
 - [ArzEn-ST: A Three-way Speech Translation Corpus for Code-Switched Egyptian Arabic - English](https://arxiv.org/abs/2211.12000)
 - [ArzEn-LLM: Code-Switched Egyptian Arabic-English Translation and Speech Recognition Using LLMs](https://arxiv.org/abs/2406.18120)
 - [ArzEn-MultiGenre: An aligned parallel dataset of Egyptian Arabic song lyrics, novels, and subtitles, with English translations](https://arxiv.org/abs/2508.01411)
-- [FLEURS: Few-shot Learning Evaluation of Universal Representations of Speech](https://arxiv.org/abs/2205.12446)
-- [Arabic Code-Switching Speech Recognition using Monolingual Data](https://arxiv.org/abs/2107.01573)
 
-### Arabic Speech Datasets
+### Arabic Speech & NLP Data Repositories
 
 - [Mohamed Rashad Arabic Speech Datasets](https://huggingface.co/collections/MohamedRashad/arabic-speech-datasets)
 - [QCRI Speech Corpus](https://huggingface.co/collections/ArabicSpeech/qcri-speech-corpus)
 - [ARABIC NLP DATA CATALOGUE MASADER](https://arbml.github.io/masader/)
 
-### LLM Leaderboards
+### Arabic & Multilingual LLM Benchmarks
 
 - [silma-ai/Arabic-LLM-Broad-Leaderboard](https://huggingface.co/spaces/silma-ai/Arabic-LLM-Broad-Leaderboard)
 - [OALL/Open-Arabic-LLM-Leaderboard](https://huggingface.co/spaces/OALL/Open-Arabic-LLM-Leaderboard)
@@ -211,11 +261,12 @@ pip install -r requirements.txt
 - [MohamedRashad/arabic-tokenizers-leaderboard](https://huggingface.co/spaces/MohamedRashad/arabic-tokenizers-leaderboard)
 - [LMArena](https://lmarena.ai/leaderboard)
 
-### Translation LLMs
+### Translation-Focused LLMs
 
 - [Command-A-Translate: Raising the Bar of Machine Translation with Difficulty Filtering](https://aclanthology.org/2025.wmt-1.55/)
 - [Seed-X: Building Strong Multilingual Translation LLM with 7B Parameters](https://arxiv.org/abs/2507.13618)
 
-### Useful Utils
+### Tooling & Utilities
 
 - [Fix your Right-to-Left (RTL) text when you mix it with Left-to-Right (LTR) text](https://fixtxt.co/)
+- [Convert Mermaid Diagrams to High-Quality PNG Images](https://www.mermaidonline.live/mermaid-to-png)
