@@ -43,7 +43,8 @@ For a deeper dive into our work, you can explore the full paper and the accompan
   A concise overview highlighting the key contributions, model architecture, and evaluation outcomes.
 
 **Correspondence:**
-Ibrahim Amin – *[IbrahimAmin532@gmail.com](mailto:IbrahimAmin532@gmail.com)*
+
+Ibrahim Amin – *[IbrahimAmin532@gmail.com](mailto:IbrahimAmin532@gmail.com)* \
 Dr. Fahima – *[fahima@aast.edu](mailto:fahima@aast.edu)*
 
 ## Getting Started
@@ -70,9 +71,6 @@ The paper is organized as follows:
 9. **Future Work** – Suggests directions for further research.
 10. **References** – Lists all cited works in Springer-compliant format.
 
-**Correspondence:**
-Dr. Fahima – *[fahima@aast.edu](mailto:fahima@aast.edu)*
-
 ## Cascaded Models: Evaluation and Analysis
 
 ### ArzEn-ST: A Three-way Speech Translation Corpus for Code-Switched Egyptian Arabic - English
@@ -93,6 +91,7 @@ Dr. Fahima – *[fahima@aast.edu](mailto:fahima@aast.edu)*
 
 - MGB-3
 - DACS
+- Arzen train ?
 
 ### Evaluation Datasets
 
