@@ -15,7 +15,7 @@ from tqdm import tqdm
 
 
 def build_fleurs_ar_eg(
-    out_dir="fleurs_ar_eg",
+    out_dir="../data/raw/fleurs_ar_eg",
     train_max_hours=math.inf,
     max_train_duration_sec=30.0,
 ):

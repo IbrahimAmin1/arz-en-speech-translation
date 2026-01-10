@@ -2,7 +2,7 @@
 Download MGB-3 dataset locally
 
 Example usage:
-    $ python build_mgb3.py
+    $ python download_mgb3.py
 """
 
 import os
@@ -14,7 +14,7 @@ from tqdm import tqdm
 
 
 def build_mgb3_ar(
-    out_dir="mgb3_ar",
+    out_dir="../data/raw/mgb3_ar",
 ):
     os.makedirs(out_dir, exist_ok=True)
 
