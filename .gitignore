@@ -1,6 +1,15 @@
 # Custom
-ASR-TTS-paper-daily
-papers
+ASR-TTS-paper-daily/
+papers/
+docs/
+assets/
+.markdownlint.json
+
+# Ignore everything except .gitkeep
+models/*
+!models/.gitkeep
+data/*
+!data/.gitkeep
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
