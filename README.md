@@ -23,6 +23,8 @@
   - [Reported Zero-shot Whisper Paper Model Evaluations](#reported-zero-shot-whisper-paper-model-evaluations)
   - [Personal Zero-shot Whisper Model Evaluations](#personal-zero-shot-whisper-model-evaluations)
   - [Fine-tuned Whisper Model Evaluations](#fine-tuned-whisper-model-evaluations)
+  - [Model Comparison](#model-comparison)
+  - [Metric Comparison](#metric-comparison)
 - [Environment, Requirements and Dependencies](#environment-requirements-and-dependencies)
 - [References](#references)
   - [Project Artifacts (Research Paper and Presentation)](#project-artifacts-research-paper-and-presentation)
@@ -40,22 +42,28 @@ For a deeper dive into our work, you can explore the full paper and the accompan
 - **Paper:** [ArzEn-E2E: Advancing End-to-End Speech Translation for Egyptian Arabic](https://www.overleaf.com/project/6929db0402a08f0749b23518)  
   A detailed study presenting the methodology, experiments, and results of our end-to-end speech translation model for Egyptian Arabic.
 
-- **Presentation:** [ArzEn-E2E Presentation](https://docs.google.com/presentation/d/1-vVKJsEQ59G4NaCPfwJ7EiEfvRK2tsHbqS5wwKmGosw/edit?slide=id.p#slide=id.p)  
+- **Presentation:** [ArzEn-E2E Presentation I](https://docs.google.com/presentation/d/1OPavZytVxQzuSJCRFDDU1AJSZH5qNmuwO9KC1nZS-fA/edit?slide=id.p#slide=id.p)  
   A concise overview highlighting the key contributions, model architecture, and evaluation outcomes.
+- **Presentation:** [ArzEn-E2E Presentation II](https://docs.google.com/presentation/d/1QxnYi9oPT-tb6eUJUNv7pu1k-aX3J2zmDgXv39ZpHGw/edit?slide=id.p#slide=id.p)  
+  A concise overview highlighting previous work.
 
 **Correspondence:**
 
-Ibrahim Amin – *[IbrahimAmin532@gmail.com](mailto:IbrahimAmin532@gmail.com)* \
-Dr. Fahima – *[fahima@aast.edu](mailto:fahima@aast.edu)*
+Ibrahim Amin **(Corresponding author)** – *[IbrahimAmin532@gmail.com](mailto:IbrahimAmin532@gmail.com)* \
+Dr. Waleed – *[waleed@aast.edu](mailto:waleed@aast.edu)* \
+Dr. Fahima – *[fahima@aast.edu](mailto:fahima@aast.edu)* \
+Dr. Wesam – *[w.askar@adj.aast.edu](mailto:w.askar@adj.aast.edu)*
 
 ## Getting Started
 
 > Train an Arz-En speech-to-text translation (S2TT) model using LLM-translated, Egyptian Colloquial Arabic (ECA) code-switched, labeled speech datasets.
 
-The goal is to produce a **high-quality S2TT model** suitable for:
+The goal is to produce:
 
-1. Introducing the **first open-source, high-quality end-to-end (E2E) S2TT model** for the ECA dialect.
-2. Delivering an **efficient model that performs well in low-resource environments**.
+1. A **high-quality LLM-translated, Egyptian Colloquial Arabic (ECA) code-switched, labeled speech dataset**
+1. A **high-quality S2TT model** suitable for:
+   1. Introducing the **first open-source, high-quality end-to-end (E2E) S2TT model** for the ECA dialect.
+   1. Delivering an **efficient model that performs well in low-resource environments**.
 
 ## Paper Structure
 
@@ -76,11 +84,27 @@ The paper is organized as follows:
 
 ### ArzEn-ST: A Three-way Speech Translation Corpus for Code-Switched Egyptian Arabic - English
 
-- TBC
+| **Aspect**       | **Details**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Paper Info**   | Hamed, I., Habash, N., Abdennadher, S., & Vu, N. T. (2022). "ArzEn-ST: A Three-way Speech Translation Corpus for Code-Switched Egyptian Arabic-English." WANLP 2022.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| **Objective**    | Extend ArzEn speech corpus with translations in both directions (CS→Egyptian Arabic and CS→English) to create a three-way parallel ST corpus for training and evaluating ASR, MT, and ST systems.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| **Methodology**  | - **Data**: Extended original ArzEn corpus (12 hours, 6,216 sentences)<br>- **Translation**: Manual translation by bilingual professionals with comprehensive guidelines<br>  - General rules (GR): intended meaning, handle difficult segments, abbreviation handling<br>  - Speech rules (SR): preserve style/disfluencies, maintain punctuation, mark partial words<br>  - CS rules (CSWR): handle borrowed words, allow rewrites for fluency, manage repetitions<br>- **Baselines**:<br>  - **ASR**: Joint CTC/attention E2E with ESPnet, 12/6 Transformer blocks, SpecAugment<br>  - **MT**: Fairseq Transformer (5 encoder/decoder layers, 512 dim), BPE tokenization<br>  - **ST**: Cascaded (ASR→MT)               |
+| **Dataset**      | - **Core**: ArzEn-ST 12 hours (train: 3,344 sent., dev: 1,402 sent., test: 1,470 sent.)<br>- **Additional Training Data**:<br>  - ASR: Callhome, MGB-3, Librispeech (5h), MGB-2 (5h)<br>  - MT: 324k extra Egyptian Arabic-English parallel sentences from Callhome, LDC corpora (LDC2012T09, LDC2017T07, LDC2019T01, LDC2020T05), MADAR<br>- **CS Types**: Inter-sentential, extra-sentential, intra-sentential, intra-word, explicatory, elaboratory<br>- **Four representations** per utterance: audio, CS transcription, Egyptian Arabic translation, English translation                                                                                                                                              |
+| **Result**       | **With ArzEn-ST only**:<br>- ASR: WER 57.9%, CER 36.2%<br>- MT CSW→En: BLEU 8.6<br>- MT CSW→Ar: BLEU 48.0<br>- ST CSW→En: BLEU 4.5<br>- ST CSW→Ar: BLEU 13.0<br><br>**With Extra training data**:<br>- ASR: WER 34.7%, CER 20.0% (40% WER reduction)<br>- MT CSW→En: BLEU 34.3 (300% improvement)<br>- MT CSW→Ar: BLEU 79.8 (66% improvement)<br>- ST CSW→En: BLEU 16.5 (267% improvement)<br>- ST CSW→Ar: BLEU 31.1 (139% improvement)<br>- ST performance ~50% of MT (error propagation effect)                                                                                                                                                                                                                          |
+| **Conclusion**   | Successfully created first three-way parallel CS speech translation corpus with naturalistic data. External training data crucial for low-resource CS tasks. Cascaded ST systems outperform limited E2E approaches in low-resource settings. Translation into primary language (Arabic) significantly easier than secondary language (English).                                                                                                                                                                                                                                                                                                                                                                            |
+| **Research Gap** | - **Cascaded architecture only**: No end-to-end ST models developed or compared<br>- **Error propagation**: ~50% performance drop from MT to ST due to cascaded pipeline<br>- **No joint training**: ASR and MT components trained independently<br>- **Traditional architectures**: Uses older Transformer/RNN models, not modern pre-trained models like Whisper or large speech LLMs<br>- **Limited real-time capability**: Two-stage inference slower than potential E2E<br>- **No multimodal integration**: No joint audio-text representations<br>- **Small test set**: 1,470 sentences may not capture full CS complexity<br>- **No direct E2E baseline**: Cannot compare cascaded vs. E2E performance on same data |
 
 ### ArzEn-LLM: Code-Switched Egyptian Arabic-English Translation and Speech Recognition Using LLMs
 
-- TBC
+| **Aspect**       | **Details**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Paper Info**   | Heakl, A., Zaghloul, Y., Ali, M., Hossam, R., & Gomaa, W. (2024). "ArzEn-LLM: Code-Switched Egyptian Arabic-English Translation and Speech Recognition Using LLMs." Procedia Computer Science.                                                                                                                                                                                                                                                                                                                                                                |
+| **Objective**    | Develop MT and ASR systems for code-switched Egyptian Arabic-English using large language models, with cascaded speech-to-text translation pipeline.                                                                                                                                                                                                                                                                                                                                                                                                          |
+| **Methodology**  | - **MT**: Fine-tuned LLaMa2 7B, LLaMa3 8B, Gemma1.1 2B/7B using DoRA adapters with int4 quantization<br>- **ASR**: Fine-tuned Whisper (Small, Medium) models<br>- **ST**: Cascaded system (ASR → MT)<br>- Training: 2x T4 GPUs (16GB VRAM), paged-Adam optimizer, gradient checkpointing, gradient accumulation (step=4)<br>- Data preprocessing: removed URLs, emoticons, lowercase, resampling to 16kHz for audio                                                                                                                                           |
+| **Dataset**      | - **Training**: ArzEn-ST (3,344 sentences) + ArzEn-MultiGenre parallel corpora<br>- **Test**: ArzEn-ST test set (1,402 sentences)<br>- Additional pre-training on larger parallel datasets (song lyrics, novels, subtitles)                                                                                                                                                                                                                                                                                                                                   |
+| **Result**       | - **MT CSW→En**: LLaMa3 8B achieved BLEU 53.64 (+56% over SOTA 8.6), BERT-F1 81.1%, METEOR 0.62<br>- **MT CSW→Ar**: LLaMa3 8B achieved BLEU 87.2 (+9.3% over SOTA 79.8), BERT-F1 98.8%<br>- **ASR**: Whisper Medium WER 31.1% (-11.6% from SOTA 34.7%), CER 12.0%<br>- **Human Evaluation**: 9.2/10 rating for translation quality<br>- **Quantization**: Q5 model (68.75% size reduction) with only 1-1.2% performance degradation, 5.6GB footprint, 7.2 tokens/sec throughput                                                                               |
+| **Conclusion**   | LLMs with adapter-based fine-tuning achieve significant improvements in code-switched MT and ASR. Cascaded ST systems viable for low-resource settings. Quantized models enable deployment on consumer hardware for real-time applications.                                                                                                                                                                                                                                                                                                                   |
+| **Research Gap** | - **Cascaded system limitations**: Two-stage pipeline introduces error propagation from ASR to MT<br>- **No end-to-end speech translation**: Direct audio→text translation not explored<br>- **Limited real-time performance**: Cascaded approach has higher latency than potential E2E models<br>- **No joint optimization**: ASR and MT trained separately without shared representations<br>- **Inference inefficiency**: Two model calls required (ASR then MT) vs. single E2E model<br>- Translation quality depends on ASR accuracy (error compounding) |
 
 ## Proposed Methodology
 
@@ -131,13 +155,13 @@ graph TB
 
 - MGB-3
 - DACS
-- Arzen train ?
+- Arzen-ST train set
 
 ### Evaluation Datasets
 
 - Fleurs
 - ESCWA
-- Arzen-ST
+- Arzen-ST Test set
 
 ## Whisper Model Fine-tuning and Evaluation
 
@@ -145,10 +169,10 @@ graph TB
 cd src/
 
 # Single-GPU Fine-tuning
-python whisper_finetuning.py -m /path/to/pretrained-whisper-model -d {fleurs,custom-yt,arzen-llm,egyptian-audiobooks,mgb3,synthetic-data,mixed-data,all-real} -s /path/to/save/finetuned-whisper-model
+python whisper_finetuning.py -m /path/to/pretrained-whisper-model -d {mgb3,dacs,arzen-st} -s /path/to/save/finetuned-whisper-model
 
 # Whisper Model Evaluation
-python whisper_evaluation.py --dataset-name {fleurs,escwa} --model-path /path/to/whisper-model
+python whisper_evaluation.py --dataset-name {fleurs,escwa,arzen-st} --model-path /path/to/whisper-model
 ```
 
 ## Whisper Model Evaluations
@@ -192,6 +216,25 @@ python whisper_evaluation.py --dataset-name {fleurs,escwa} --model-path /path/to
 |         base          | Translated MGB-3/DACS  |       (BS=16 & GA=2)*       | (fp32) BSD, beam_size=5, chunk_length=30s |           XX.XX%           |   XX.XX%   |     XX.XX%     |     XX.XX%     |   XX.XX%    |
 |         small         | Translated MGB-3/DACS  |       (BS=16 & GA=2)*       | (fp32) BSD, beam_size=5, chunk_length=30s |           XX.XX%           |   XX.XX%   |     XX.XX%     |     XX.XX%     |   XX.XX%    |
 
+---
+
+### Model Comparison
+
+| Model                      | Configuration    | ASR (WER) | MT (BLEU) | S2TT (BLEU) | S2TT vs MT Gap     |
+| -------------------------- | ---------------- | --------- | --------- | ----------- | ------------------ |
+| ESPnet ASR → Fairseq MT    | ArzEn-ST only    | 57.9%     | 8.6       | 4.5         | -48% performance   |
+| ESPnet ASR → Fairseq MT    | ArzEn-ST + Extra | 34.7%     | 34.3      | 16.5        | -52% performance   |
+| Whisper Medium → LLaMa3 8B | ArzEn-ST + Extra | 31.1%     | 53.64     | 29.5        | −45.0% performance |
+
+---
+
+### Metric Comparison
+
+| Metric    | ArzEn-ST (2022) | E2E Approach (Whisper Small) (2025) | Improvement   | ArzEn-LLM (2024) |
+| --------- | --------------- | ----------------------------------- | ------------- | ---------------- |
+| ASR WER   | 34.7%           | 33.0%                               | +5% better    | 31.1% (best)     |
+| S2TT BLEU | 16.5            | 24.6                                | +49.1% better | 29.5% (best)     |
+
 <div style="page-break-before:always"></div>
 
 `NOTES`:
@@ -204,7 +247,7 @@ python whisper_evaluation.py --dataset-name {fleurs,escwa} --model-path /path/to
 
 - Ubuntu 24.04
 - NVIDIA RTX 4060 Ti 16GB CUDA-Enabled GPU
-- NVIDIA Drivers 570.195.03
+- NVIDIA Drivers 595.58.03
 - PyTorch 2.6.0 + CUDA Toolkit 12.4
 
 ```bash
@@ -265,6 +308,9 @@ pip install -r requirements.txt
 
 - [Command-A-Translate: Raising the Bar of Machine Translation with Difficulty Filtering](https://aclanthology.org/2025.wmt-1.55/)
 - [Seed-X: Building Strong Multilingual Translation LLM with 7B Parameters](https://arxiv.org/abs/2507.13618)
+- [TranslateGemma Technical Report](https://arxiv.org/pdf/2601.09012)
+- [TranslateGemma Technical Blog](https://blog.google/innovation-and-ai/technology/developers-tools/translategemma/)
+- [TranslateGemma Ollama](https://ollama.com/library/translategemma)
 
 ### Tooling & Utilities
 
