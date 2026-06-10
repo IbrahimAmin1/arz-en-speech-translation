@@ -1,8 +1,7 @@
 # Custom
-ASR-TTS-paper-daily/
-papers/
-docs/
 assets/
+docs/
+notebooks/
 .markdownlint.json
 
 # Ignore everything except .gitkeep
