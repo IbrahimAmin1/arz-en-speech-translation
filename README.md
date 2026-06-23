@@ -49,7 +49,7 @@ For a deeper dive into our work, you can explore the full paper and the accompan
 **Correspondence:**
 
 Ibrahim Amin **(Corresponding author)** – *[IbrahimAmin532@gmail.com](mailto:IbrahimAmin532@gmail.com)* \
-Dr. Wesam – *[w.askar@adj.aast.edu](mailto:wesamaaa@aast.edu)*
+Dr. Wesam A. Askar – *[wesamaaa@aast.edu](mailto:wesamaaa@aast.edu)*
 
 ## Getting Started
 
